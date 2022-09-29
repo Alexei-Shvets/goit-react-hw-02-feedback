@@ -1,7 +1,13 @@
 import React, { Component, Fragment } from 'react';
+
+//куски секций и компонентов
 import SectionTitle from './SectionTitle/SectionTitle';
 import Feedback from './Feedback';
+import Notification from './Notification/Notification';
 import Statistics from './Statistics/Statistics';
+
+//стилистика общего контейнера
+import { Container } from './App.styled';
 
 class App extends Component {
   state = {
@@ -38,25 +44,29 @@ class App extends Component {
 
   render() {
     const { good, neutral, bad } = this.state;
+    const variation = good > 0 || neutral > 0 || bad > 0;
     return (
       <Fragment>
+        <Container>
         <SectionTitle title="Please leave Feedback">
         <Feedback 
             options={this.state}
             handleIncrement ={this.handleIncrement}
           />
         </SectionTitle>
-      <SectionTitle title="Statictics">
-              <Statistics
+        <SectionTitle title="Statictics">
+          {!variation ?
+            <Notification message="There is no feedback" /> :
+            <Statistics
               good={good}
               neutral={neutral}
               bad={bad}
-            //вызов в тотале, потому как в фидбэк жсх в баттоне мы кинули функцию
+            //вызов в тотале, потому как в фидбэк жсх в баттоне кинул функцию
             total={this.countTotalFeedback()}
-            positiveTotal={this.countPositiveFeedbackPercentage()}
-              
-        />
-        </SectionTitle>
+            positiveTotal={this.countPositiveFeedbackPercentage()}              
+        />}              
+          </SectionTitle>
+          </Container>
     </Fragment>)
   }
 }
